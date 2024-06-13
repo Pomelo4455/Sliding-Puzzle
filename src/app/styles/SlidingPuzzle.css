@@ -1,0 +1,35 @@
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2.5px);
+  }
+  50% {
+    transform: translateX(2.5px);
+  }
+  75% {
+    transform: translateX(-2.5px);
+  }
+}
+
+.shake-hover:hover {
+  animation: shake 0.25s;
+}
+
+.shake-active {
+  animation: shake 0.25s;
+}
+
+.puzzle-container {
+  position: relative;
+  width: calc(var(--grid-size) * var(--tile-size));
+  height: calc(var(--grid-size) * var(--tile-size));
+}
+
+.tile {
+  position: absolute;
+  transition: transform 0.3s ease-in-out;
+  margin: 5px;
+}
