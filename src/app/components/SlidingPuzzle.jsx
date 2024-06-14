@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Tile from "./Tile";
+import PuzzleControls from "./PuzzleControls";
+import Timer from "./Timer";
+import TileContainer from "./TileContainer";
 import "../styles/SlidingPuzzle.css";
 
 const TILE_SIZE = 150; // Adjust the size of each tile
@@ -14,6 +16,12 @@ const SlidingPuzzle = () => {
   const [selectingHiddenTile, setSelectingHiddenTile] = useState(true);
   const [gameWon, setGameWon] = useState(false);
   const [hasShuffled, setHasShuffled] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [isTiming, setIsTiming] = useState(false);
+  const [moves, setMoves] = useState(0);
+  const [playAgain, setPlayAgain] = useState(false);
+  const [solvedByUser, setSolvedByUser] = useState(true); // New state
+  const [highScore, setHighScore] = useState(null); // High score state
 
   useEffect(() => {
     const initialTiles = [];
@@ -27,9 +35,24 @@ const SlidingPuzzle = () => {
       }
     }
     setTiles(initialTiles);
-  }, [gridSize]);
+    setPlayAgain(false);
+  }, [gridSize, playAgain]);
+
+  useEffect(() => {
+    let timerInterval;
+    if (isTiming) {
+      timerInterval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer + 1);
+      }, 1000);
+    } else if (!isTiming && timer !== 0) {
+      clearInterval(timerInterval);
+    }
+    return () => clearInterval(timerInterval);
+  }, [isTiming, timer]);
 
   const handleTileMouseDown = (row, col) => {
+    if (gameWon) return; // Prevent tile movement if game is won
+
     if (selectingHiddenTile) {
       setTiles((prevTiles) =>
         prevTiles.map((tile) =>
@@ -41,6 +64,10 @@ const SlidingPuzzle = () => {
       setHiddenTile({ actualPosition: [row, col] });
       setSelectingHiddenTile(false);
     } else {
+      if (!isTiming && hasShuffled) {
+        setIsTiming(true);
+      }
+
       const hiddenRow = hiddenTile.actualPosition[0];
       const hiddenCol = hiddenTile.actualPosition[1];
 
@@ -63,25 +90,38 @@ const SlidingPuzzle = () => {
             return tile;
           });
 
-          checkWin(updatedTiles);
+          checkWin(updatedTiles, true); // Pass true to indicate user solved
           return updatedTiles;
         });
         setHiddenTile({ actualPosition: [row, col] });
+        setMoves((prevMoves) => prevMoves + 1);
       }
     }
   };
 
-  const checkWin = (tiles) => {
+  const checkWin = (tiles, userSolved) => {
     const won = tiles.every(
       (tile) =>
         tile.actualPosition[0] === tile.initialPosition[0] &&
         tile.actualPosition[1] === tile.initialPosition[1]
     );
     setGameWon(won);
+    if (won) {
+      setIsTiming(false);
+      setSolvedByUser(userSolved); // Update solvedByUser
+
+      // Update high score if user solved and it's a better time
+      if (userSolved && (highScore === null || timer < highScore)) {
+        setHighScore(timer);
+      }
+    }
   };
 
   const shuffleTiles = () => {
     setHasShuffled(true);
+    setIsTiming(false);
+    setTimer(0);
+    setMoves(0);
     const shuffledTiles = [...tiles];
     for (let i = shuffledTiles.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -104,119 +144,82 @@ const SlidingPuzzle = () => {
     setGameWon(false);
   };
 
-  return (
-    <div className="flex-col py-10 flex items-center justify-center h-fit w-full dark:bg-[#211e20] dark:text-[#ffd191]">
-      <div className="flex w-full text-2xl justify-evenly gap-2 mb-10 flex-wrap">
-        {[
-          { step: "Remove a tile", action: null },
-          { step: "Shuffle the board", action: shuffleTiles },
-          { step: "Solve!!!", action: null },
-        ].map((stepObj, index) => (
-          <div
-            className={`flex justify-center items-center mb-4 sm:mb-0 transition-transform ${
-              index === 0 && !hiddenTile
-                ? "scale-150"
-                : index === 1 && !hasShuffled && hiddenTile
-                ? "scale-150"
-                : index === 2 && hasShuffled && hiddenTile
-                ? "scale-150"
-                : ""
-            }`}
-            key={index}
-          >
-            <div className="p-1 mr-2 w-8 h-8 flex justify-center items-center rounded-full bg-[#7c3f58] text-[#fff6d3] dark:bg-[#ffd191] dark:text-[#211e20]">
-              {index === 0
-                ? hiddenTile
-                  ? "✓"
-                  : 1
-                : index === 1
-                ? hasShuffled
-                  ? "✓"
-                  : 2
-                : index === 2
-                ? gameWon
-                  ? "✓"
-                  : 3
-                : ""}
-            </div>
-            <div className="text-[#7c3f58] dark:text-[#ffd191] text-center">
-              {stepObj.step.split(" ").map((word, idx) =>
-                word === "Shuffle" ? (
-                  <button
-                    key={idx}
-                    className={`bg-[#7c3f58] text-[#fff6d3] dark:bg-[#ffd191] dark:text-[#211e20] px-2 py-1 rounded ${
-                      hiddenTile ? "shake-hover cursor-pointer" : ""
-                    }`}
-                    onClick={(e) => {
-                      stepObj.action && stepObj.action();
-                    }}
-                    disabled={!hiddenTile}
-                  >
-                    {word}
-                  </button>
-                ) : (
-                  ` ${word} `
-                )
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+  const solvePuzzle = () => {
+    const solvedTiles = tiles.map((tile) => ({
+      ...tile,
+      actualPosition: [...tile.initialPosition],
+    }));
+    setTiles(solvedTiles);
+    setHiddenTile({ actualPosition: [gridSize - 1, gridSize - 1] });
+    setGameWon(true);
+    setIsTiming(false);
+    setSolvedByUser(false); // Indicate the puzzle was solved automatically
+  };
 
-      <div className="flex justify-center mb-10">
-        {["Easy", "Medium", "Hard"].map((level, idx) => (
+  const formatHighScoreTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return minutes > 0
+      ? `${minutes} minute${
+          minutes > 1 ? "s" : ""
+        } and ${remainingSeconds} second${remainingSeconds !== 1 ? "s" : ""}`
+      : `${remainingSeconds} second${remainingSeconds !== 1 ? "s" : ""}`;
+  };
+
+  return (
+    <div className="flex-col py-10 flex items-center justify-center h-fit w-full bg-[#fff6d3] dark:bg-[#211e20] dark:text-[#ffd191]">
+      <PuzzleControls
+        gridSize={gridSize}
+        setGridSize={setGridSize}
+        hiddenTile={hiddenTile}
+        setSelectingHiddenTile={setSelectingHiddenTile}
+        hasShuffled={hasShuffled}
+        setHasShuffled={setHasShuffled}
+        gameWon={gameWon}
+        setGameWon={setGameWon}
+        setHiddenTile={setHiddenTile}
+        setTiles={setTiles}
+        setIsTiming={setIsTiming}
+        setTimer={setTimer}
+        shuffleTiles={shuffleTiles}
+        solvePuzzle={solvePuzzle} // Add this line
+      />
+      <TileContainer
+        tiles={tiles}
+        TILE_SIZE={TILE_SIZE}
+        TILE_MARGIN={TILE_MARGIN}
+        gridSize={gridSize}
+        handleTileMouseDown={handleTileMouseDown}
+      />
+      {gameWon && hasShuffled && hiddenTile && (
+        <div className="mt-4 p-2 bg-[#f9a875] text-[#fff6d3] dark:bg-[#ff924f] dark:text-[#211e20] rounded">
+          Congratulations!!! You {solvedByUser ? "won" : '"won"'} in {moves}{" "}
+          moves
           <button
-            key={idx}
-            className={`mx-2 px-4 py-2 rounded ${
-              gridSize === idx + 3
-                ? "bg-[#f9a875] text-[#fff6d3] dark:bg-[#ff924f] dark:text-[#211e20]"
-                : "bg-[#7c3f58] text-[#fff6d3] dark:bg-[#66605c] dark:text-[#ffd191]"
-            }`}
             onClick={() => {
-              setGridSize(idx + 3);
+              setGridSize(gridSize);
               setSelectingHiddenTile(true);
               setHasShuffled(false);
               setGameWon(false);
               setHiddenTile(null);
               setTiles([]);
+              setIsTiming(false);
+              setTimer(0);
+              setPlayAgain(true);
             }}
-            disabled={gridSize === idx + 3}
+            className="ml-4 bg-[#7c3f58] text-[#fff6d3] dark:bg-[#66605c] dark:text-[#ffd191] px-4 py-2 rounded"
           >
-            {level}
+            Play Again!!!
           </button>
-        ))}
-      </div>
-
-      <div
-        className="puzzle-container"
-        style={{
-          "--tile-size": `${TILE_SIZE}px`,
-          "--grid-size": gridSize,
-          width: `calc(100% - 20px)`,
-          maxWidth: `${gridSize * (TILE_SIZE + TILE_MARGIN * 2)}px`,
-          height: `${gridSize * (TILE_SIZE + TILE_MARGIN * 2)}px`,
-        }}
-      >
-        {tiles.map((tile, index) => (
-          <Tile
-            key={index}
-            initialPosition={tile.initialPosition}
-            actualPosition={tile.actualPosition}
-            isHidden={tile.isHidden}
-            onMouseDown={() =>
-              handleTileMouseDown(
-                tile.actualPosition[0],
-                tile.actualPosition[1]
-              )
-            }
-          />
-        ))}
-      </div>
-      {gameWon && hasShuffled && hiddenTile && (
-        <div className="mt-4 p-2 bg-[#f9a875] text-[#fff6d3] dark:bg-[#ff924f] dark:text-[#211e20] rounded">
-          You Win!
         </div>
       )}
+      {highScore !== null && (
+        <div className="mt-4 p-2 bg-[#7c3f58] text-[#fff6d3] dark:bg-[#66605c] dark:text-[#ffd191] rounded">
+          High Score: {formatHighScoreTime(highScore)}
+        </div>
+      )}
+
+      <Timer timer={timer} />
     </div>
   );
 };
