@@ -22,12 +22,12 @@ const PuzzleControls = ({
         <button
           key={idx}
           className={`mx-2 px-4 py-2 rounded ${
-            gridSize === idx + 2
+            gridSize === idx + 3
               ? "bg-[#f9a875] text-[#fff6d3] dark:bg-[#ff924f] dark:text-[#211e20]"
               : "bg-[#7c3f58] text-[#fff6d3] dark:bg-[#66605c] dark:text-[#ffd191]"
           }`}
           onClick={() => {
-            setGridSize(idx + 2);
+            setGridSize(idx + 3);
             setSelectingHiddenTile(true);
             setHasShuffled(false);
             setGameWon(false);
@@ -36,7 +36,7 @@ const PuzzleControls = ({
             setIsTiming(false);
             setTimer(0);
           }}
-          disabled={gridSize === idx + 2}
+          disabled={gridSize === idx + 3}
         >
           {level}
         </button>
