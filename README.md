@@ -77,7 +77,7 @@ To get a local copy up and running, follow these simple steps:
 To learn more about the technologies used, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs)
-- [React Documentation](https://reactjs.org/docs/getting-started.html)
+- [React Documentation](https://react.dev/learn)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [next-themes](https://github.com/pacocoursey/next-themes)
 - [react-icons](https://react-icons.github.io/react-icons/)
@@ -100,5 +100,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## Contact 📬
 
 santi_mille@hotmail.com
-
-Project Link: [https://github.com/pomelo4455/sliding-puzzle](https://github.com/pomelo4455/sliding-puzzle)
