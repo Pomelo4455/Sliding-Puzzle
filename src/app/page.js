@@ -3,7 +3,7 @@ import SlidingPuzzle from "./components/SlidingPuzzle";
 
 export default function Home() {
   return (
-    <div className="w-screen h-screen bg-[#fff6d3] dark:bg-blue-300">
+    <div className="w-full h-screen bg-[#fff6d3] dark:bg-[#211e20]">
       <NavBar />
       <SlidingPuzzle />
     </div>

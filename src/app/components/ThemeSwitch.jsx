@@ -27,13 +27,13 @@ export default function ThemeSwitch() {
     <CSSTransition in={inProp} timeout={300} classNames="fade">
       {resolvedTheme === "dark" ? (
         <FiSun
-          className="cursor-pointer bg-[#7c3f58] p-2 rounded-full text-[#fff6d3]"
+          className="cursor-pointer bg-[#7c3f58] p-1 sm:p-2 rounded-full text-[#fff6d3] dark:bg-[#ffd191] dark:text-[#211e20]"
           onClick={handleThemeChange}
           size={50}
         />
       ) : (
         <FiMoon
-          className="cursor-pointer bg-[#7c3f58] p-2 rounded-full text-[#fff6d3]"
+        className="cursor-pointer bg-[#7c3f58] p-1 sm:p-2 rounded-full text-[#fff6d3] dark:bg-[#ffd191] dark:text-[#211e20]"
           onClick={handleThemeChange}
           size={50}
         />

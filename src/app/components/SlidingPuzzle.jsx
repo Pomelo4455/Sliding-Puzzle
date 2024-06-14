@@ -5,10 +5,10 @@ import Tile from "./Tile";
 import "../styles/SlidingPuzzle.css";
 
 const TILE_SIZE = 150; // Adjust the size of each tile
-const GRID_SIZE = 4;
 const TILE_MARGIN = 5;
 
 const SlidingPuzzle = () => {
+  const [gridSize, setGridSize] = useState(3); // Default to Easy (3x3)
   const [tiles, setTiles] = useState([]);
   const [hiddenTile, setHiddenTile] = useState(null);
   const [selectingHiddenTile, setSelectingHiddenTile] = useState(true);
@@ -17,8 +17,8 @@ const SlidingPuzzle = () => {
 
   useEffect(() => {
     const initialTiles = [];
-    for (let row = 0; row < GRID_SIZE; row++) {
-      for (let col = 0; col < GRID_SIZE; col++) {
+    for (let row = 0; row < gridSize; row++) {
+      for (let col = 0; col < gridSize; col++) {
         initialTiles.push({
           initialPosition: [row, col],
           actualPosition: [row, col],
@@ -27,7 +27,7 @@ const SlidingPuzzle = () => {
       }
     }
     setTiles(initialTiles);
-  }, []);
+  }, [gridSize]);
 
   const handleTileMouseDown = (row, col) => {
     if (selectingHiddenTile) {
@@ -93,7 +93,7 @@ const SlidingPuzzle = () => {
 
     const updatedTiles = shuffledTiles.map((tile, index) => ({
       ...tile,
-      actualPosition: [Math.floor(index / GRID_SIZE), index % GRID_SIZE],
+      actualPosition: [Math.floor(index / gridSize), index % gridSize],
     }));
 
     const hiddenTilePosition = updatedTiles.find(
@@ -105,15 +105,26 @@ const SlidingPuzzle = () => {
   };
 
   return (
-    <div className="flex-col py-10 flex items-center justify-center h-fit w-full">
-      <div className="flex w-full text-2xl justify-evenly mb-10">
+    <div className="flex-col py-10 flex items-center justify-center h-fit w-full dark:bg-[#211e20] dark:text-[#ffd191]">
+      <div className="flex w-full text-2xl justify-evenly gap-2 mb-10 flex-wrap">
         {[
           { step: "Remove a tile", action: null },
           { step: "Shuffle the board", action: shuffleTiles },
           { step: "Solve!!!", action: null },
         ].map((stepObj, index) => (
-          <div className="flex justify-center items-center" key={index}>
-            <div className="p-1 mr-2 w-8 h-8 flex justify-center items-center rounded-full bg-[#7c3f58] text-[#fff6d3]">
+          <div
+            className={`flex justify-center items-center mb-4 sm:mb-0 transition-transform ${
+              index === 0 && !hiddenTile
+                ? "scale-150"
+                : index === 1 && !hasShuffled && hiddenTile
+                ? "scale-150"
+                : index === 2 && hasShuffled && hiddenTile
+                ? "scale-150"
+                : ""
+            }`}
+            key={index}
+          >
+            <div className="p-1 mr-2 w-8 h-8 flex justify-center items-center rounded-full bg-[#7c3f58] text-[#fff6d3] dark:bg-[#ffd191] dark:text-[#211e20]">
               {index === 0
                 ? hiddenTile
                   ? "✓"
@@ -128,12 +139,12 @@ const SlidingPuzzle = () => {
                   : 3
                 : ""}
             </div>
-            <div className="text-[#7c3f58]">
+            <div className="text-[#7c3f58] dark:text-[#ffd191] text-center">
               {stepObj.step.split(" ").map((word, idx) =>
                 word === "Shuffle" ? (
                   <button
                     key={idx}
-                    className="bg-[#7c3f58] text-[#fff6d3] px-2 py-1 rounded cursor-pointer shake-hover"
+                    className="bg-[#7c3f58] text-[#fff6d3] dark:bg-[#ffd191] dark:text-[#211e20] px-2 py-1 rounded cursor-pointer shake-hover"
                     onClick={(e) => {
                       stepObj.action && stepObj.action();
                     }}
@@ -149,13 +160,39 @@ const SlidingPuzzle = () => {
           </div>
         ))}
       </div>
+
+      <div className="flex justify-center mb-10">
+        {["Easy", "Medium", "Hard"].map((level, idx) => (
+          <button
+            key={idx}
+            className={`mx-2 px-4 py-2 rounded ${
+              gridSize === idx + 3
+                ? "bg-[#f9a875] text-[#fff6d3] dark:bg-[#ff924f] dark:text-[#211e20]"
+                : "bg-[#7c3f58] text-[#fff6d3] dark:bg-[#66605c] dark:text-[#ffd191]"
+            }`}
+            onClick={() => {
+              setGridSize(idx + 3);
+              setSelectingHiddenTile(true);
+              setHasShuffled(false);
+              setGameWon(false);
+              setHiddenTile(null);
+              setTiles([]);
+            }}
+            disabled={gridSize === idx + 3}
+          >
+            {level}
+          </button>
+        ))}
+      </div>
+
       <div
         className="puzzle-container"
         style={{
           "--tile-size": `${TILE_SIZE}px`,
-          "--grid-size": GRID_SIZE,
-          width: `${GRID_SIZE * (TILE_SIZE + TILE_MARGIN * 2)}px`,
-          height: `${GRID_SIZE * (TILE_SIZE + TILE_MARGIN * 2)}px`,
+          "--grid-size": gridSize,
+          width: `calc(100% - 20px)`,
+          maxWidth: `${gridSize * (TILE_SIZE + TILE_MARGIN * 2)}px`,
+          height: `${gridSize * (TILE_SIZE + TILE_MARGIN * 2)}px`,
         }}
       >
         {tiles.map((tile, index) => (
@@ -174,7 +211,7 @@ const SlidingPuzzle = () => {
         ))}
       </div>
       {gameWon && hasShuffled && hiddenTile && (
-        <div className="mt-4 p-2 bg-[#f9a875] text-[#fff6d3] rounded">
+        <div className="mt-4 p-2 bg-[#f9a875] text-[#fff6d3] dark:bg-[#ff924f] dark:text-[#211e20] rounded">
           You Win!
         </div>
       )}
