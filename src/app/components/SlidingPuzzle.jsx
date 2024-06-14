@@ -144,7 +144,9 @@ const SlidingPuzzle = () => {
                 word === "Shuffle" ? (
                   <button
                     key={idx}
-                    className="bg-[#7c3f58] text-[#fff6d3] dark:bg-[#ffd191] dark:text-[#211e20] px-2 py-1 rounded cursor-pointer shake-hover"
+                    className={`bg-[#7c3f58] text-[#fff6d3] dark:bg-[#ffd191] dark:text-[#211e20] px-2 py-1 rounded ${
+                      hiddenTile ? "shake-hover cursor-pointer" : ""
+                    }`}
                     onClick={(e) => {
                       stepObj.action && stepObj.action();
                     }}
