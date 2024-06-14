@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Sliding Puzzle 🧩
 
-## Getting Started
+Welcome to the Sliding Puzzle game! This project offers a classic sliding puzzle experience with modern features and a sleek design.
 
-First, run the development server:
+## Features ✨
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Difficulty Levels:** Choose your preferred challenge level.
+- **Themes:** Switch between dark and light themes.
+- **Custom Tile Removal:** Select which tile to remove instead of a random one.
+- **Shuffle Button:** Start a new game with a shuffle.
+- **Automatic Solve:** Let the game solve itself.
+- **High Score Display:** Tracks and displays high scores (only if solved manually).
+- **Smooth UX:** Pieces move on mouseDown for better user experience.
+- **Timer:** Keep track of your solving time.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used 💻
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- **JavaScript**
+- **Next.js**
+- **React**
+- **Tailwind CSS**
+- **next-themes:** For theme management.
+- **react-icons:** For sun and moon icons.
+- **react-transition-group:** For smooth transitions and animations.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Getting Started 🚀
 
-## Learn More
+To get a local copy up and running, follow these simple steps:
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/pomelo4455/sliding-puzzle.git
+    cd sliding-puzzle
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    # or
+    bun install
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+3. **Run the development server:**
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    # or
+    pnpm dev
+    # or
+    bun dev
+    ```
 
-## Deploy on Vercel
+4. **Open your browser:**
+    Navigate to [http://localhost:3000](http://localhost:3000) to see the app in action.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure 📁
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **`src/app/components`**: Reusable UI components (e.g., `NavBar.jsx`, `PuzzleControls.jsx`, etc.)
+- **`src/app/styles`**: CSS files (e.g., `SlidingPuzzle.css`, `ThemeSwitch.css`)
+- **`public`**: Static files (e.g., `favicon.ico`)
+- **Root Files**: Configuration and setup files (e.g., `globals.css`, `layout.js`, `page.js`, `providers.js`, `.eslintrc.json`, `package.json`, etc.)
+
+## Scripts 🛠️
+
+- **`dev`**: Starts the development server.
+- **`build`**: Builds the application for production.
+- **`start`**: Starts the production server.
+- **`lint`**: Runs the linter.
+
+## Learn More 📚
+
+To learn more about the technologies used, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Documentation](https://reactjs.org/docs/getting-started.html)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [next-themes](https://github.com/pacocoursey/next-themes)
+- [react-icons](https://react-icons.github.io/react-icons/)
+- [react-transition-group](http://reactcommunity.org/react-transition-group/)
+
+## Contributing 🤝
+
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+## License 📄
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact 📬
+
+santi_mille@hotmail.com
+
+Project Link: [https://github.com/pomelo4455/sliding-puzzle](https://github.com/pomelo4455/sliding-puzzle)
