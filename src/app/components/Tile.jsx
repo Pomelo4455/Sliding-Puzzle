@@ -4,7 +4,7 @@ import React from "react";
 import puzzleImage from "../../../public/puzzleImage.jpg";
 
 const TILE_SIZE = 150; // Adjust the size of each tile
-const GRID_SIZE = 2;
+const GRID_SIZE = 4;
 const TILE_MARGIN = 5;
 
 const Tile = ({ initialPosition, actualPosition, isHidden, onMouseDown }) => {
