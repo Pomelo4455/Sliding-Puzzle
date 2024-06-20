@@ -7,7 +7,7 @@ import TileContainer from "./TileContainer";
 import "../styles/SlidingPuzzle.css";
 
 const TILE_SIZE = 150; // Adjust the size of each tile
-const TILE_MARGIN = 5;
+const TILE_MARGIN = 2.5;
 
 const SlidingPuzzle = () => {
   const [gridSize, setGridSize] = useState(3); // Default to Easy (3x3)
@@ -49,6 +49,18 @@ const SlidingPuzzle = () => {
     }
     return () => clearInterval(timerInterval);
   }, [isTiming, timer]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setGridSize(3); // Set to easy difficulty if on mobile
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleTileMouseDown = (row, col) => {
     if (gameWon) return; // Prevent tile movement if game is won
@@ -105,13 +117,19 @@ const SlidingPuzzle = () => {
         tile.actualPosition[0] === tile.initialPosition[0] &&
         tile.actualPosition[1] === tile.initialPosition[1]
     );
-    setGameWon(won);
+    if (hasShuffled) {
+      setGameWon(won);
+    }
     if (won) {
       setIsTiming(false);
       setSolvedByUser(userSolved); // Update solvedByUser
 
       // Update high score if user solved and it's a better time
-      if (userSolved && (highScore === null || timer < highScore)) {
+      if (
+        userSolved &&
+        hasShuffled &&
+        (highScore === null || timer < highScore)
+      ) {
         setHighScore(timer);
       }
     }

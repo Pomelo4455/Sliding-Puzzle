@@ -31,5 +31,5 @@
 .tile {
   position: absolute;
   transition: transform 0.3s ease-in-out;
-  margin: 5px;
+  margin: 2.5px;
 }
