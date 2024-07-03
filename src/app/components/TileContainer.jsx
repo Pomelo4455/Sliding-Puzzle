@@ -2,19 +2,19 @@ import Tile from "./Tile";
 
 const TileContainer = ({
   tiles,
-  TILE_SIZE,
-  TILE_MARGIN,
+  tileSize,
+  tileMargin,
   gridSize,
   handleTileMouseDown,
 }) => (
   <div
     className="puzzle-container"
     style={{
-      "--tile-size": `${TILE_SIZE}px`,
+      "--tile-size": `${tileSize}px`,
       "--grid-size": gridSize,
       width: `calc(100% - 20px)`,
-      maxWidth: `${gridSize * (TILE_SIZE + TILE_MARGIN * 2)}px`,
-      height: `${gridSize * (TILE_SIZE + TILE_MARGIN * 2)}px`,
+      maxWidth: `${gridSize * (tileSize + tileMargin * 2)}px`,
+      height: `${gridSize * (tileSize + tileMargin * 2)}px`,
     }}
   >
     {tiles.map((tile, index) => (
@@ -23,6 +23,8 @@ const TileContainer = ({
         initialPosition={tile.initialPosition}
         actualPosition={tile.actualPosition}
         isHidden={tile.isHidden}
+        tileSize={tileSize}
+        tileMargin={tileMargin}
         onMouseDown={() =>
           handleTileMouseDown(tile.actualPosition[0], tile.actualPosition[1])
         }

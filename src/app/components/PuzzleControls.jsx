@@ -14,7 +14,7 @@ const PuzzleControls = ({
   setIsTiming,
   setTimer,
   shuffleTiles,
-  solvePuzzle, // Add this prop
+  solvePuzzle,
 }) => {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -29,31 +29,36 @@ const PuzzleControls = ({
   }, []);
 
   return (
-    <div className="flex flex-col w-full text-2xl justify-evenly gap-2 mb-10 flex-wrap">
+    <div className="flex flex-col w-full text-2xl justify-evenly gap-2 lg:px-0 px-4 mb-10 flex-wrap">
       <div className="flex justify-center mb-10">
-        {["Easy", "Medium", "Hard"].map((level, idx) => (
-          <button
-            key={idx}
-            className={`mx-2 px-4 py-2 rounded ${
-              gridSize === idx + 3
-                ? "bg-[#f9a875] text-[#fff6d3] dark:bg-[#ff924f] dark:text-[#211e20]"
-                : "bg-[#7c3f58] text-[#fff6d3] dark:bg-[#66605c] dark:text-[#ffd191]"
-            }`}
-            onClick={() => {
-              setGridSize(idx + 3);
-              setSelectingHiddenTile(true);
-              setHasShuffled(false);
-              setGameWon(false);
-              setHiddenTile(null);
-              setTiles([]);
-              setIsTiming(false);
-              setTimer(0);
-            }}
-            disabled={gridSize === idx + 3 || (isMobile && idx !== 0)}
-          >
-            {level}
-          </button>
-        ))}
+        {["Easy", "Medium", "Hard"].map((level, idx) => {
+          const displayLevel =
+            isMobile && idx !== 0 ? "Map doesn't fit!" : level;
+          const fontSizeClass = isMobile && idx !== 0 ? "text-base" : "";
+          return (
+            <button
+              key={idx}
+              className={`mx-2 px-4 py-2 rounded ${fontSizeClass} ${
+                gridSize === idx + 3
+                  ? "bg-[#f9a875] text-[#fff6d3] dark:bg-[#ff924f] dark:text-[#211e20]"
+                  : "bg-[#7c3f58] text-[#fff6d3] dark:bg-[#66605c] dark:text-[#ffd191]"
+              }`}
+              onClick={() => {
+                setGridSize(idx + 3);
+                setSelectingHiddenTile(true);
+                setHasShuffled(false);
+                setGameWon(false);
+                setHiddenTile(null);
+                setTiles([]);
+                setIsTiming(false);
+                setTimer(0);
+              }}
+              disabled={gridSize === idx + 3 || (isMobile && idx !== 0)}
+            >
+              {displayLevel}
+            </button>
+          );
+        })}
       </div>
       <div className="flex w-full justify-around items-center">
         {[

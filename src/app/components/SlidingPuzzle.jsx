@@ -6,9 +6,6 @@ import Timer from "./Timer";
 import TileContainer from "./TileContainer";
 import "../styles/SlidingPuzzle.css";
 
-const TILE_SIZE = 150; // Adjust the size of each tile
-const TILE_MARGIN = 2.5;
-
 const SlidingPuzzle = () => {
   const [gridSize, setGridSize] = useState(3); // Default to Easy (3x3)
   const [tiles, setTiles] = useState([]);
@@ -22,6 +19,8 @@ const SlidingPuzzle = () => {
   const [playAgain, setPlayAgain] = useState(false);
   const [solvedByUser, setSolvedByUser] = useState(true); // New state
   const [highScore, setHighScore] = useState(null); // High score state
+  const [tileSize, setTileSize] = useState(150);
+  const [tileMargin, setTileMargin] = useState(2.5);
 
   useEffect(() => {
     const initialTiles = [];
@@ -53,7 +52,12 @@ const SlidingPuzzle = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
+        setTileSize(100);
+        setTileMargin(1.5);
         setGridSize(3); // Set to easy difficulty if on mobile
+      } else {
+        setTileSize(150);
+        setTileMargin(2.5);
       }
     };
 
@@ -204,8 +208,8 @@ const SlidingPuzzle = () => {
       />
       <TileContainer
         tiles={tiles}
-        TILE_SIZE={TILE_SIZE}
-        TILE_MARGIN={TILE_MARGIN}
+        tileSize={tileSize}
+        tileMargin={tileMargin}
         gridSize={gridSize}
         handleTileMouseDown={handleTileMouseDown}
       />

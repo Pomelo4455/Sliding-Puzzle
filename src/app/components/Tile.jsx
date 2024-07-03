@@ -3,10 +3,14 @@
 import React from "react";
 import puzzleImage from "../../../public/puzzleImage.jpg";
 
-const TILE_SIZE = 150; // Adjust the size of each tile
-const TILE_MARGIN = 2.5;
-
-const Tile = ({ initialPosition, actualPosition, isHidden, onMouseDown }) => {
+const Tile = ({
+  initialPosition,
+  actualPosition,
+  isHidden,
+  tileSize,
+  tileMargin,
+  onMouseDown,
+}) => {
   return (
     <div
       className={`tile ${
@@ -15,18 +19,18 @@ const Tile = ({ initialPosition, actualPosition, isHidden, onMouseDown }) => {
           : ""
       }`}
       style={{
-        width: TILE_SIZE,
-        height: TILE_SIZE,
+        width: tileSize,
+        height: tileSize,
         backgroundImage: isHidden ? "none" : `url(${puzzleImage.src})`,
-        backgroundPosition: `${-initialPosition[1] * TILE_SIZE}px ${
-          -initialPosition[0] * TILE_SIZE
+        backgroundPosition: `${-initialPosition[1] * tileSize}px ${
+          -initialPosition[0] * tileSize
         }px`,
-        backgroundSize: `calc(var(--grid-size) * ${TILE_SIZE}px) calc(var(--grid-size) * ${TILE_SIZE}px)`,
+        backgroundSize: `calc(var(--grid-size) * ${tileSize}px) calc(var(--grid-size) * ${tileSize}px)`,
         cursor: isHidden ? "default" : "pointer",
         backgroundColor: isHidden ? "transparent" : "initial",
         transform: `translate(${
-          actualPosition[1] * (TILE_SIZE + TILE_MARGIN * 2)
-        }px, ${actualPosition[0] * (TILE_SIZE + TILE_MARGIN * 2)}px)`,
+          actualPosition[1] * (tileSize + tileMargin * 2)
+        }px, ${actualPosition[0] * (tileSize + tileMargin * 2)}px)`,
       }}
       onMouseDown={onMouseDown}
     ></div>
